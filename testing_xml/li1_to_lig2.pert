@@ -1,0 +1,116 @@
+version 1
+molecule LIG
+        name           X1
+        initial_charge -0.18000
+        final_charge -1.18000
+        initial_sigma 1.00000
+        final_sigma 0.00000
+        initial_epsilon 0.00000
+        final_epsilon 0.00000
+        initial_local_coordinate1 -0.03100
+        final_local_coordinate1 -0.03100
+        initial_local_coordinate2 -0.05100
+        final_local_coordinate2 -0.05100
+        initial_local_coordinate3 0.00000
+        final_local_coordinate3 0.00000
+    endvirtual-site
+    atom
+        name           C00
+        initial_type   opls_800
+        final_type     opls_800
+        initial_LJ     3.43870 0.06190
+        final_LJ       3.43870 0.06190
+        initial_charge 0.02590
+        final_charge   0.02590
+    endatom
+    atom
+        name           C01
+        initial_type   opls_801
+        final_type     opls_801
+        initial_LJ     3.70010 0.06190
+        final_LJ       3.70010 0.06190
+        initial_charge -0.26880
+        final_charge   -0.26880
+    endatom
+    atom
+        name           C02
+        initial_type   opls_802
+        final_type     opls_802
+        initial_LJ     3.28250 0.06190
+        final_LJ       3.28250 0.06190
+        initial_charge 0.23710
+        final_charge   0.23710
+    endatom
+    atom
+        name           N03
+        initial_type   opls_803
+        final_type     opls_803
+        initial_LJ     3.39680 0.10060
+        final_LJ       13.39680 0.33961
+        initial_charge -0.33020
+        final_charge   -1.33020
+    endatom
+    atom
+        name           C04
+        initial_type   opls_804
+        final_type     opls_804
+        initial_LJ     3.28250 0.06190
+        final_LJ       3.28250 0.06190
+        initial_charge 0.23710
+        final_charge   0.23710
+    endatom
+    atom
+        name           C05
+        initial_type   opls_805
+        final_type     opls_805
+        initial_LJ     3.70010 0.06190
+        final_LJ       3.70010 0.06190
+        initial_charge -0.26880
+        final_charge   -0.26880
+    endatom
+    atom
+        name           H06
+        initial_type   opls_806
+        final_type     opls_806
+        initial_LJ     2.24860 0.03600
+        final_LJ       2.24860 0.03600
+        initial_charge 0.11190
+        final_charge   0.11190
+    endatom
+    atom
+        name           H07
+        initial_type   opls_807
+        final_type     opls_807
+        initial_LJ     2.18310 0.03600
+        final_LJ       2.18310 0.03600
+        initial_charge 0.14790
+        final_charge   0.14790
+    endatom
+    atom
+        name           H08
+        initial_type   opls_808
+        final_type     opls_808
+        initial_LJ     2.33530 0.03600
+        final_LJ       2.33530 0.03600
+        initial_charge 0.06990
+        final_charge   0.06990
+    endatom
+    atom
+        name           H09
+        initial_type   opls_809
+        final_type     opls_809
+        initial_LJ     2.33530 0.03600
+        final_LJ       2.33530 0.03600
+        initial_charge 0.06990
+        final_charge   0.06990
+    endatom
+    atom
+        name           H10
+        initial_type   opls_810
+        final_type     opls_810
+        initial_LJ     2.18310 0.03600
+        final_LJ       2.18310 0.03600
+        initial_charge 0.14790
+        final_charge   0.14790
+    endatom
+endmolecule
