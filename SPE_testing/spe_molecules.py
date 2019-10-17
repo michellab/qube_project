@@ -1,8 +1,4 @@
 
-
-import os
-
-import zipfile
 import os
 import re
 import sys
@@ -956,15 +952,15 @@ def readXmlParameters(pdbfile, xmlfile):
             for i in range(0,nProper):  
                 dihedral_id = DihedralID( atoms[int(di1[i])].index(), atoms[int(di2[i])].index(), atoms[int(di3[i])].index(), atoms[int(di4[i])].index())
                 #print(dihedral_id) 
-                dih1= float(dicts_proper[i]['k1'])*(2/4.184)*(1+Cos(int(dicts_proper[i]['periodicity1'])* phi - float(dicts_proper[i]['phase1'])))
-                dih2= float(dicts_proper[i]['k2'])*(2/4.184)*(1+Cos(int(dicts_proper[i]['periodicity2'])* phi - float(dicts_proper[i]['phase2'])))
-                dih3= float(dicts_proper[i]['k3'])*(2/4.184)*(1+Cos(int(dicts_proper[i]['periodicity3'])* phi - float(dicts_proper[i]['phase3'])))
-                dih4= float(dicts_proper[i]['k4'])*(2/4.184)*(1+Cos(int(dicts_proper[i]['periodicity4'])* phi - float(dicts_proper[i]['phase4'])))
+                dih1= float(dicts_proper[i]['k1'])/4.184*(1+Cos(int(dicts_proper[i]['periodicity1'])* phi - float(dicts_proper[i]['phase1'])))
+                dih2= float(dicts_proper[i]['k2'])/4.184*(1+Cos(int(dicts_proper[i]['periodicity2'])* phi - float(dicts_proper[i]['phase2'])))
+                dih3= float(dicts_proper[i]['k3'])/4.184*(1+Cos(int(dicts_proper[i]['periodicity3'])* phi - float(dicts_proper[i]['phase3'])))
+                dih4= float(dicts_proper[i]['k4'])/4.184*(1+Cos(int(dicts_proper[i]['periodicity4'])* phi - float(dicts_proper[i]['phase4'])))
                 dih_fun = dih1 + dih2 +dih3 +dih4
                 dihedralfuncs.set(dihedral_id, dih_fun)
                 #print(dihedralfuncs.potentials())
                 for t in range(1,5):
-                    mol_params.add(dihedral_id, float(dicts_proper[i]['k%s'%t])*(2/4.184), int(dicts_proper[i]['periodicity%s'%t]), float(dicts_proper[i]['phase%s'%t]) ) 
+                    mol_params.add(dihedral_id, float(dicts_proper[i]['k%s'%t])*/4.184, int(dicts_proper[i]['periodicity%s'%t]), float(dicts_proper[i]['phase%s'%t]) ) 
         #print(mol_params.getAllDihedrals() )
 
             
@@ -1009,10 +1005,10 @@ def readXmlParameters(pdbfile, xmlfile):
             for i in range(0,nImproper):  
                 improper_id = ImproperID( atoms[int(di_im1[i])].index(), atoms[int(di_im2[i])].index(), atoms[int(di_im3[i])].index(), atoms[int(di_im4[i])].index())
                 #print(improper_id) 
-                imp1= float(dicts_improper[i]['k1'])*(2/4.184)*(1+Cos(int(dicts_improper[i]['periodicity1'])* phi_im - float(dicts_improper[i]['phase1'])))
-                imp2= float(dicts_improper[i]['k2'])*(2/4.184)*(1+Cos(int(dicts_improper[i]['periodicity2'])* phi_im - float(dicts_improper[i]['phase2'])))
-                imp3= float(dicts_improper[i]['k3'])*(2/4.184)*(1+Cos(int(dicts_improper[i]['periodicity3'])* phi_im - float(dicts_improper[i]['phase3'])))
-                imp4= float(dicts_improper[i]['k4'])*(2/4.184)*(1+Cos(int(dicts_improper[i]['periodicity4'])* phi_im - float(dicts_improper[i]['phase4'])))
+                imp1= float(dicts_improper[i]['k1'])/4.184*(1+Cos(int(dicts_improper[i]['periodicity1'])* phi_im - float(dicts_improper[i]['phase1'])))
+                imp2= float(dicts_improper[i]['k2'])/4.184*(1+Cos(int(dicts_improper[i]['periodicity2'])* phi_im - float(dicts_improper[i]['phase2'])))
+                imp3= float(dicts_improper[i]['k3'])/4.184*(1+Cos(int(dicts_improper[i]['periodicity3'])* phi_im - float(dicts_improper[i]['phase3'])))
+                imp4= float(dicts_improper[i]['k4'])/4.184*(1+Cos(int(dicts_improper[i]['periodicity4'])* phi_im - float(dicts_improper[i]['phase4'])))
                 imp_fun = imp1 + imp2 +imp3 +imp4
                 improperfuncs.set(improper_id, imp_fun)
                 #print(improperfuncs.potentials())
