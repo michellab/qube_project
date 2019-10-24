@@ -33,6 +33,8 @@ import numpy as np
 #   Config file parameters
 #
 ####################################################################################################
+VirtualSite_flag =  Parameter("vSites flag", True, """ Please work""")
+
 gpu = Parameter("gpu", 0, """The device ID of the GPU on which to run the simulation.""")
 
 rf_dielectric = Parameter("reaction field dielectric",82,
@@ -236,6 +238,9 @@ def setupMoves(system, random_seed, GPUS):
     Integrator_OpenMM.setDeviceIndex(str(GPUS))
     Integrator_OpenMM.setLJDispersion(lj_dispersion.val)
 
+    if VirtualSite_flag.val:
+        Integrator_OpenMM.setVirtualSite(True)
+        
     if cutoff_type.val != "nocutoff":
         Integrator_OpenMM.setCutoffDistance(cutoff_dist.val)
     if cutoff_type.val == "cutoffperiodic":
@@ -1229,29 +1234,29 @@ def writeLog(ligA, ligB, mapping):
     stream.close()
  
 
-cutoff_type = Parameter("cutoff type", "nocutoff", """The cutoff method to use during the simulation.""")
-
-cutoff_dist = Parameter("cutoff distance", 6.3 * angstrom,
-                        """The cutoff distance to use for the non-bonded interactions.""")
-rf_dielectric = Parameter("reaction field dielectric",0,
-                          """Dielectric constant to use if the reaction field cutoff method is used.""")
-
-molecules = ["ethane", "propane", "propene", "acetone", "acetaldehyde", "acetic_acid", "methylacetate"]
+#molecules = ["methylformate", "acetamide", "N-methylacetamide", "dimethylacetamide", "nitroethane", "benzene", "benzonitrile"]
+#molecules = ["toluene", "nitrobenzene", "acetophenone", "benzamide", "phenol", "chlorobenzene"]
+#molecules = ["methanol", "N-methylaniline", "fluorobenzene", "trifluoromethylbenzene", "bromobenzene", "1,3-dichloropropane"]
+#molecules = ["formaldehyde", "2-hexanone" , "2-heptanone", "cyclopentanone", "cyclohexanone", "ethyl_acetate", "pentanenitrile" , "propionitrile",  "1-propanamine", "1-butanamine"]
+#molecules = ["nitro-methane","1-nitropropane" ,"2-nitropropane" ,"N,N-dimethylformamide" ,"ethanol" ,"1-butanol" ,"2-methylpropan-2-ol", "1-pentanol", "3-pentanol" ,"2-methyl-2-butanol" ,"1-octanol"]
 #molecules=[ "nitroethane", "2-hexanone","ethyl_acetate", "styrene", "benzaldehyde"] 
+#molecules =[ "ethylbenzene", "1,2-dimethylbenzene", "1-methylethylbenene","1,2,4-trimethylbenzene" ,
+#"styrene" , "benzaldehyde" ,"o-chloroaniline" ,"2-methylphenol" ,"4-methylphenol", "benzyl_alcohol"] 
+molecules = ["methylformate"]
+
 results = []
 for mols in molecules:
     res ={}
-    os.chdir("/home/cs-bari1/qube-somd/molecules/"+mols)
-    xmlfile1 = "MOL.xml"
+    os.chdir("/home/sofia/testing_vs/molecules/"+mols)
+    xmlfile1 = "MOL_extra.xml"
     pdbfile1 = "MOL.pdb"
-    (molecules, space) = assignVirtualSites(pdbfile1, xmlfile1)
+    molecules = readXmlParameters(pdbfile1, xmlfile1)
+    space = Cartesian()
     system1 = createSystem(molecules)
     system1 = setupForcefields(system1, space)
     ener = system1.energy()
     res = (mols, ener)
     results.append(res)
 
-print("Cutoff_distance: ",cutoff_dist.val)
-    
-openmm = ["ethane --> 2.6631","propane --> -1.4775","propene --> 2.4251", "acetic_acid --> -31.536", "methylacetate --> -22.1988", "nitroethane --> 30.8874", "2-hexanone --> -24.7712",  "ethyl_acetate --> -23.3404", "styrene --> -9.1585", "benzaldehyde --> -10.5698"]
 results
+
