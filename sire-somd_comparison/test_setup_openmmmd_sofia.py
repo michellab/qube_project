@@ -883,6 +883,21 @@ def _pvt_test_nve(verbose=False):
         #print("Total energy is %s " %total_energy)
 
 
+def test_setup(verbose = False):
+
+    sire_nrg = system.energy().value()
+
+    if verbose:
+        print("\nInitial Sire energy = %s kcal mol-1" % sire_nrg)
+
+    openmm = _pvt_createOpenMM(system[mols.number()], 25*celsius, 1*atm)
+
+    openmm_nrg = openmm.getPotentialEnergy(system).value()
+
+    if verbose:
+        print("\nInitial OpenMM energy = %s kcal mol-1" % openmm_nrg)
+
+    assert_almost_equal( sire_nrg, openmm_nrg, 1 )
 
 
 if __name__ == "__main__":
@@ -890,4 +905,5 @@ if __name__ == "__main__":
     test_nvt_setup(True)
     test_nve_setup(True)
     test_getters_setters(True)
+    test_setup(True)
     # #test_nve(True)
