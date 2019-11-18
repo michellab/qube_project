@@ -1826,13 +1826,6 @@ def getDummies(molecule):
 
     return to_dummies, from_dummies
 
-# cutoff_type = Parameter("cutoff type", "nocutoff", """The cutoff method to use during the simulation.""")
-
-# cutoff_dist = Parameter("cutoff distance", 6.3 * angstrom,
-#                         """The cutoff distance to use for the non-bonded interactions.""")
-# rf_dielectric = Parameter("reaction field dielectric",0,
-#                           """Dielectric constant to use if the reaction field cutoff method is used.""")
-
 #molecules = ["methylformate", "acetamide", "N-methylacetamide", "dimethylacetamide", "nitroethane", "benzene", "benzonitrile"]
 #molecules = ["toluene", "nitrobenzene", "acetophenone", "benzamide", "phenol", "chlorobenzene"]
 #molecules = ["methanol", "N-methylaniline", "fluorobenzene", "trifluoromethylbenzene", "bromobenzene", "1,3-dichloropropane"]
@@ -1852,7 +1845,6 @@ os.chdir("/home/sofia/Desktop/Sofia/SI_data/molecules/"+mols)
 xmlfile1 = "MOL_extra.xml"
 pdbfile1 = "MOL.pdb"
 (molecules, space) = readXmlParameters(pdbfile1, xmlfile1)
-space = Cartesian()
 system1 = createSystemFreeEnergy(molecules)
 system1 = setupForceFieldsFreeEnergy(system1, space)
 
