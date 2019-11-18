@@ -1,0 +1,13 @@
+version 1
+molecule MOL
+	atom
+		name C01
+		initial_type    c1
+		final_type      c1
+		initial_LJ      0.327110 0.258990
+		final_LJ        0.327110 0.258990 
+		initial_charge  0.018400
+		final_charge   -0.10840
+	endatom
+endmolecule
+
