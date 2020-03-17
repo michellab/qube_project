@@ -1003,6 +1003,142 @@ def setupMovesFreeEnergy(system, random_seed, GPUS, lam_val):
 
     return moves
 
+
+def createSystemFreeEnergy(molecules):
+    r"""creates the system for free energy calculation
+    Parameters
+    ----------
+    molecules : Sire.molecules
+        Sire object that contains a lot of information about molecules
+    Returns
+    -------
+    system : Sire.system
+    """
+    print ("Create the System...")
+
+    moleculeNumbers = molecules.molNums()
+    moleculeList = []
+
+    for moleculeNumber in moleculeNumbers:
+        molecule = molecules.molecule(moleculeNumber)[0].molecule()
+        moleculeList.append(molecule)
+
+    # Scan input to find a molecule with passed residue number 
+    # The residue name of the first residue in this molecule is
+    # used to name the solute. This is used later to match
+    # templates in the flex/pert files.
+
+    solute = None
+    for molecule in moleculeList:
+        if ( molecule.residue(ResIdx(0)).number() == ResNum(perturbed_resnum.val) ):
+            solute = molecule
+            moleculeList.remove(molecule)
+            break
+
+    if solute is None:
+        print ("FATAL ! Could not find a solute to perturb with residue number %s in the input ! Check the value of your cfg keyword 'perturbed residue number'" % perturbed_resnum.val)
+        sys.exit(-1)
+
+    #solute = moleculeList[0]
+
+    lig_name = solute.residue(ResIdx(0)).name().value()
+
+    solute = solute.edit().rename(lig_name).commit()
+
+    perturbations_lib = PerturbationsLibrary(morphfile.val)
+    solute = perturbations_lib.applyTemplate(solute)
+
+    perturbations = solute.property("perturbations")
+
+    lam = Symbol("lambda")
+
+    initial = Perturbation.symbols().initial()
+    final = Perturbation.symbols().final()
+
+    solute = solute.edit().setProperty("perturbations",
+                                       perturbations.recreate((1 - lam) * initial + lam * final)).commit()
+
+    # We put atoms in three groups depending on what happens in the perturbation
+    # non dummy to non dummy --> the hard group, uses a normal intermolecular FF
+    # non dummy to dummy --> the todummy group, uses SoftFF with alpha = Lambda
+    # dummy to non dummy --> the fromdummy group, uses SoftFF with alpha = 1 - Lambda
+    # We start assuming all atoms are hard atoms. Then we call getDummies to find which atoms
+    # start/end as dummies and update the hard, todummy and fromdummy groups accordingly
+
+    solute_grp_ref = MoleculeGroup("solute_ref", solute)
+    solute_grp_ref_hard = MoleculeGroup("solute_ref_hard")
+    solute_grp_ref_todummy = MoleculeGroup("solute_ref_todummy")
+    solute_grp_ref_fromdummy = MoleculeGroup("solute_ref_fromdummy")
+
+    solute_ref_hard = solute.selectAllAtoms()
+    solute_ref_todummy = solute_ref_hard.invert()
+    solute_ref_fromdummy = solute_ref_hard.invert()
+
+    to_dummies, from_dummies = getDummies(solute)
+
+    if to_dummies is not None:
+        ndummies = to_dummies.count()
+        dummies = to_dummies.atoms()
+
+        for x in range(0, ndummies):
+            dummy_index = dummies[x].index()
+            solute_ref_hard = solute_ref_hard.subtract(solute.select(dummy_index))
+            solute_ref_todummy = solute_ref_todummy.add(solute.select(dummy_index))
+
+    if from_dummies is not None:
+        ndummies = from_dummies.count()
+        dummies = from_dummies.atoms()
+
+        for x in range(0, ndummies):
+            dummy_index = dummies[x].index()
+            solute_ref_hard = solute_ref_hard.subtract(solute.select(dummy_index))
+            solute_ref_fromdummy = solute_ref_fromdummy.add(solute.select(dummy_index))
+
+    solute_grp_ref_hard.add(solute_ref_hard)
+    solute_grp_ref_todummy.add(solute_ref_todummy)
+    solute_grp_ref_fromdummy.add(solute_ref_fromdummy)
+
+    solutes = MoleculeGroup("solutes")
+    solutes.add(solute)
+
+    molecules = MoleculeGroup("molecules")
+    molecules.add(solute)
+
+    solvent = MoleculeGroup("solvent")
+
+    #for molecule in moleculeList[1:]:
+    for molecule in moleculeList:
+        molecules.add(molecule)
+        solvent.add(molecule)
+
+    all = MoleculeGroup("all")
+
+    all.add(molecules)
+    all.add(solvent)
+
+    all.add(solutes)
+    all.add(solute_grp_ref)
+    all.add(solute_grp_ref_hard)
+    all.add(solute_grp_ref_todummy)
+    all.add(solute_grp_ref_fromdummy)
+
+    # Add these groups to the System
+    system = System()
+
+    system.add(solutes)
+    system.add(solute_grp_ref)
+    system.add(solute_grp_ref_hard)
+    system.add(solute_grp_ref_todummy)
+    system.add(solute_grp_ref_fromdummy)
+
+    system.add(molecules)
+
+    system.add(solvent)
+
+    system.add(all)
+
+    return system
+
 if __name__ == "__main__":
 
     xmlfile = "G1_4a.xml" 
