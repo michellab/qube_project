@@ -92,7 +92,10 @@ cutoff_dist = Parameter("cutoff distance", 500 * angstrom,
 
 use_restraints = Parameter("use restraints", False, """Whether or not to use harmonic restaints on the solute atoms.""")
 
+perturbed_resnum = Parameter("perturbed residue number",1,"""The residue number of the molecule to morph.""")
 
+morphfile = Parameter("morphfile", "somd.pert",
+                      """Name of the morph file containing the perturbation to apply to the system.""")
 
 
 def vsiteListToProperty(list):
