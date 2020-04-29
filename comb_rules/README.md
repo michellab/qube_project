@@ -1,3 +1,5 @@
+Molecule files: Methylacetate from the SI of the qubekit paper
+
 Modified files: 
 - corelib/src/lib/SireMove/openmmfrenergyst.*
 - wrapper/Move/OpenMMFrenergyST.pypp.cpp
