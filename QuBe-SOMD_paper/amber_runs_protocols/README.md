@@ -1,1 +1,1 @@
-This folder contains the protocols for the amber runs.
+This folder contains the protocols and the scripts for the amber runs.
